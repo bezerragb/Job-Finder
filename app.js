@@ -17,11 +17,10 @@ db
     .then(() => {
         console.log('Conectou ao banco de dados');
     })
-    .catch(err => {
-        console.log('Ocorreu um erro ao se conectar com o banco de dados', err);
-        
+    .catch((err) => {
+        console.log('Erro ao conectar ao banco', err);
     })
-
+       
 app.get('/', (req, res) => {
     res.send("Está funcionando 2")
 })
