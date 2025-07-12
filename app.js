@@ -1,5 +1,7 @@
 const express = require('express')
+const { engine }= require('express-handlebars')
 const app = express()
+const path = require('path')
 const db = require("./db/connection")
 const bodyParser = require('body-parser')
 
@@ -11,6 +13,10 @@ app.listen(port, function() {
 })
 
 app.use(bodyParser.urlencoded({extended: false}) )
+app.set('views', path.join(__dirname,'/views'))
+app.engine('handlebars', engine({defaultLayout: 'main'}))
+app.set('view engine', 'handlebars')
+app.use(express.static(path.join(__dirname, 'public')))
 
 db
     .authenticate()
@@ -22,7 +28,7 @@ db
     })
        
 app.get('/', (req, res) => {
-    res.send("Está funcionando 2")
+    res.render('index')
 })
 
 app.use('/jobs', require('./routes/jobs'))

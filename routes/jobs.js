@@ -2,6 +2,11 @@ const express = require('express')
 const router = express.Router();
 const job = require('../models/Job')
 
+
+router.get('/add', (req, res) => {
+    res.render('add')
+})
+
 // rota criada para fazer teste via postman
 router.get('/test', (req, res) => {
     res.send('deu certo')
