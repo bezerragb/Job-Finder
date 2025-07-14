@@ -5,6 +5,8 @@ const path = require('path')
 const db = require("./db/connection")
 const job = require("./models/Job")
 const bodyParser = require('body-parser')
+const Sequelize  = require('sequelize')
+const Op = Sequelize.Op
 
 const port = 8080
 
@@ -29,13 +31,30 @@ db
     })
        
 app.get('/', (req, res) => {
-    job.findAll({order: [['createdAt', 'DESC']]
-    })
-    .then(jobs => {
-        res.render('index', {
-            jobs
+
+    let search = req.query.job
+    let query = '%'+search+'%'
+    if(!search){
+        job.findAll({order: [['createdAt', 'DESC']]
         })
-    })
+        .then(jobs => {
+            res.render('index', {
+                jobs
+            })
+        })
+        .catch(err => console.log(err))
+    }else{    
+        job.findAll({
+            where: {title: {[Op.like]: query}},
+            order: [['createdAt', 'DESC']]
+        })
+        .then(jobs => {
+            res.render('index', {
+                jobs, search
+            })
+        })
+    }
+
 })
 
 app.use('/jobs', require('./routes/jobs'))
