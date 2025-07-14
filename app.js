@@ -3,6 +3,7 @@ const { engine }= require('express-handlebars')
 const app = express()
 const path = require('path')
 const db = require("./db/connection")
+const job = require("./models/Job")
 const bodyParser = require('body-parser')
 
 const port = 8080
@@ -28,7 +29,13 @@ db
     })
        
 app.get('/', (req, res) => {
-    res.render('index')
+    job.findAll({order: [['createdAt', 'DESC']]
+    })
+    .then(jobs => {
+        res.render('index', {
+            jobs
+        })
+    })
 })
 
 app.use('/jobs', require('./routes/jobs'))
